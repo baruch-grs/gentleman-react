@@ -1,24 +1,24 @@
-import { useState } from "react";
 import "./App.css";
-import { Button } from "./components";
+import { useFetch } from "./hooks";
+
+const url = "https://fakestoreapi.com/products/";
+interface Data {
+  name: string;
+  lastName: string;
+  age: number;
+}
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [name, setName] = useState("Alejandro");
-  const countMore = () => {
-    setCount((count) => count + 1);
-  };
+  const { data, error, loading } = useFetch<Data>(url);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  const changeName = () => {
-    setName("Juan");
-  };
-  return (
-    <>
-      <Button label={`Count is ${count}`} parentMethod={countMore}></Button>
-      <p>{name}</p>
-      <Button label={`Change Name`} parentMethod={changeName}></Button>
-    </>
-  );
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  return <div>{JSON.stringify(data)}</div>;
 }
 
 export default App;
